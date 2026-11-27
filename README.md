@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Projeto 01
 
-## Getting Started
+Aplicação web full-stack construída com **Next.js (App Router)**, seguindo a abordagem *Server Component First*. O projeto está em fase inicial: a estrutura de pastas e as convenções já estão definidas, e a página atual ainda é o template padrão do `create-next-app`.
 
-First, run the development server:
+## Tecnologias
+
+**Instaladas hoje**
+
+- [Next.js 16](https://nextjs.org) (App Router) + [React 19](https://react.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS 4](https://tailwindcss.com)
+- ESLint (`eslint-config-next`)
+
+**Previstas na arquitetura (ainda não instaladas)**
+
+- [shadcn/ui](https://ui.shadcn.com) + Radix UI para componentes
+- React Hook Form + [Zod](https://zod.dev) para formulários e validação
+- [Supabase](https://supabase.com) para autenticação e banco de dados
+- Jest + React Testing Library para testes
+
+## Pré-requisitos
+
+- Node.js 20 ou superior
+- npm
+
+## Como rodar
 
 ```bash
+# 1. Instalar dependências
+npm install
+
+# 2. Configurar variáveis de ambiente
+cp .env.example .env.local
+
+# 3. Subir o servidor de desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando              | Descrição                                   |
+| -------------------- | ------------------------------------------- |
+| `npm run dev`        | Servidor de desenvolvimento (porta 3000)    |
+| `npm run build`      | Build de produção                           |
+| `npm run start`      | Executa o build de produção                 |
+| `npm run lint`       | Análise estática com ESLint                 |
+| `npm run type-check` | Gera tipos do Next e checa com `tsc`        |
 
-## Learn More
+## Estrutura do projeto
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/            Rotas (App Router), layout e estilos globais
+actions/        Server Actions globais
+components/     Componentes de feature
+  ui/           Primitivos reutilizáveis (shadcn/ui)
+lib/            Helpers, clients e configurações
+types/          Tipos globais e schemas Zod compartilhados
+public/         Arquivos estáticos
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Dentro de cada rota, o padrão é:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/nome-da-pagina/
+├── page.tsx          # Server Component (busca dados, valida acesso)
+├── _components/      # Componentes específicos da página
+├── _actions/         # Server Actions da página
+└── _data-access/     # Camada de acesso a dados
+```
 
-## Deploy on Vercel
+## Convenções
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Server Components por padrão; `"use client"` apenas quando houver estado, efeitos, eventos ou APIs do browser.
+- Mutações somente via Server Actions, nunca acessando o banco direto de Client Components.
+- Validação de entrada com Zod no servidor.
+- Estilização apenas com Tailwind (sem CSS inline).
+- Arquivos em `kebab-case`, componentes em `PascalCase`.
+- Sem `any` explícito: usar `unknown` com type guard.
+- Segredos apenas no servidor; `NEXT_PUBLIC_*` somente para valores seguros.
+- Branches: `feat/`, `fix/`, `chore/` + descrição em kebab-case. Commits em inglês, no imperativo.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Mais detalhes em [`CLAUDE.md`](./CLAUDE.md) e [`.claude/rules/rules-global.md`](./.claude/rules/rules-global.md).
+
+## Deploy
+
+Pensado para [Vercel](https://vercel.com) ou VPS. Veja a [documentação de deploy do Next.js](https://nextjs.org/docs/app/building-your-application/deploying).
